@@ -1,0 +1,57 @@
+buildscript {
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.1'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+}
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+apply plugin: 'application'
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+shadowJar {
+    mergeServiceFiles()
+    manifest {
+        attributes 'Main-Class': 'main.Main'
+    }
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-nop:1.7.25'
+    compile 'com.google.firebase:firebase-admin:6.14.0'
+    compile 'org.apache.poi:poi:3.9'
+    compile 'org.apache.poi:poi-ooxml:3.11'
+    compile group: 'org.swinglabs.swingx', name: 'swingx-autocomplete', version: '1.6.5-1'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group:'io.netty',name: 'netty-tcnative', version: '2.0.1.Final'
+}
+//startScripts.enabled = false
+//distTar.enabled = false
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    shadowJar
+    manifest {
+        attributes 'Implementation-Title': 'Aqua Storage',
+                'Implementation-Version': '1.0.2',
+                'Main-Class': 'main.Main'
+
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.RSA'
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
+
+    with jar
+}
+
+
