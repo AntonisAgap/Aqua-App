@@ -1,2 +1,2 @@
 # aquaApp
-This is a logistics application i made for a friend. It tracks orders,clients,sellers and products
+This is a logistics application. It tracks orders,clients,sellers and products
